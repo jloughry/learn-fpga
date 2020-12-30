@@ -14,23 +14,31 @@
 #RVGCC=$TOOLCHAIN_DIR/riscv64-unknown-elf-gcc
 #ADDITIONAL_LIB=/usr/lib/gcc/riscv64-unknown-elf/9.3.0/rv32im/ilp32/libgcc.a
 
+# Toolchain built from source
+TOOLCHAIN_DIR=/opt/riscv/bin
+RVAS=$TOOLCHAIN_DIR/riscv64-unknown-linux-gnu-as
+RVLD=$TOOLCHAIN_DIR/riscv64-unknown-linux-gnu-ld
+RVOBJCOPY=$TOOLCHAIN_DIR/riscv64-unknown-linux-gnu-objcopy
+RVOBJDUMP=$TOOLCHAIN_DIR/riscv64-unknown-linux-gnu-objdump
+RVGCC=$TOOLCHAIN_DIR/riscv64-unknown-linux-gnu-gcc
+ADDITIONAL_LIB=/opt/riscv/lib/gcc/riscv64-unknown-linux-gnu/10.2.0/lib32/ilp32/libgcc.a
+
 # Toolchain installed from https://static.dev.sifive.com/dev-tools/riscv64-unknown-elf-gcc-20171231-x86_64-linux-centos6.tar.gz
-TOOLCHAIN_DIR=/home/blevy/Packages/riscv64-unknown-elf-gcc-20171231-x86_64-linux-centos6/bin
-RVAS=$TOOLCHAIN_DIR/riscv64-unknown-elf-as
-RVLD=$TOOLCHAIN_DIR/riscv64-unknown-elf-ld
-RVOBJCOPY=$TOOLCHAIN_DIR/riscv64-unknown-elf-objcopy
-RVOBJDUMP=$TOOLCHAIN_DIR/riscv64-unknown-elf-objdump
-RVGCC=$TOOLCHAIN_DIR/riscv64-unknown-elf-gcc
-ADDITIONAL_LIB="$TOOLCHAIN_DIR/../riscv64-unknown-elf/lib/rv32im/ilp32/libm.a $TOOLCHAIN_DIR/../lib/gcc/riscv64-unknown-elf/7.2.0/rv32im/ilp32/libgcc.a"
+#TOOLCHAIN_DIR=/home/blevy/Packages/riscv64-unknown-elf-gcc-20171231-x86_64-linux-centos6/bin
+#RVAS=$TOOLCHAIN_DIR/riscv64-unknown-elf-as
+#RVLD=$TOOLCHAIN_DIR/riscv64-unknown-elf-ld
+#RVOBJCOPY=$TOOLCHAIN_DIR/riscv64-unknown-elf-objcopy
+#RVOBJDUMP=$TOOLCHAIN_DIR/riscv64-unknown-elf-objdump
+#RVGCC=$TOOLCHAIN_DIR/riscv64-unknown-elf-gcc
+#ADDITIONAL_LIB="$TOOLCHAIN_DIR/../riscv64-unknown-elf/lib/rv32im/ilp32/libm.a $TOOLCHAIN_DIR/../lib/gcc/riscv64-unknown-elf/7.2.0/rv32im/ilp32/libgcc.a"
 
 # Configuration for the ICEStick
-#ARCH=rv32i
-#ABI=ilp32
-#OPTIMIZE=-Os # This one for the ICEstick (optimize for size, we only have 6K of RAM !)
+ARCH=rv32i
+ABI=ilp32
+OPTIMIZE=-Os # This one for the ICEstick (optimize for size, we only have 6K of RAM !)
 
 # Configuration for larger boards (ULX3S, ECPC-EVN)
-ARCH=rv32im
-ABI=ilp32
-OPTIMIZE=-O3
-
+#ARCH=rv32im
+#ABI=ilp32
+#OPTIMIZE=-O3
 

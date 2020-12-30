@@ -47,8 +47,8 @@ do
    fi
 done   
 rm -f libfemtorv32.a
-riscv64-linux-gnu-ar cq libfemtorv32.a $OBJECTS 
-riscv64-linux-gnu-ranlib libfemtorv32.a
+/opt/riscv/bin/riscv64-unknown-linux-gnu-ar cq libfemtorv32.a $OBJECTS 
+/opt/riscv/bin/riscv64-unknown-linux-gnu-ranlib libfemtorv32.a
 
 
 

@@ -6,9 +6,9 @@ then
     (cd FIRMWARE/BUILD; rm firmware.hex; ../TOOLS/firmware_words; cp firmware.hex ../)
 else    
     echo "Missing FIRMWARE/firmware.hex"
-    echo "Using default (FIRMWARE/EXAMPLES/mandelbrot_terminal.s)"
+    echo "Using default (FIRMWARE/EXAMPLES/blinker_wait.s)"
     echo "To replace, cd FIRMWARE; ./make_firmware.sh EXAMPLES/....   or C_EXAMPLES/...."
-    (cd FIRMWARE; ./make_firmware.sh EXAMPLES/mandelbrot_terminal.s)
+    (cd FIRMWARE; ./make_firmware.sh EXAMPLES/blinker_wait.s)
 fi
 echo ======== Yosys
 yosys -DICE_STICK -q -p "synth_ice40 -relut -top $PROJECTNAME -json $PROJECTNAME.json" $VERILOGS || exit

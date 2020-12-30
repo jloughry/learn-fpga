@@ -20,7 +20,7 @@ end:    li a0,15     # main() return value, let all leds lit
 	ret
 
 mywait:	li t3,0
-	li t4,0x100000
+	li t4,0x400000
 mwaitl:	addi t3,t3,1
 	bne t3,t4,mwaitl
 	ret

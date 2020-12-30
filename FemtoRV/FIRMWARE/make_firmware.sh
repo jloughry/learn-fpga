@@ -1,45 +1,30 @@
-. ./config.sh
 
-mkdir -p BUILD
 
-# Compile lib
-(cd LIB; ./makeit.sh)
+echo "============> Compiling libs"
+(cd LIBFEMTORV32;  make clean all > /dev/null) # Compile hardware support lib
+(cd LIBFEMTOC;     make clean all > /dev/null) # Compile lib with printf() replacement function
+(cd CRT_BAREMETAL; make clean all > /dev/null) # Compile C runtime for baremetal 
+# Note: I 'make clean' each time, because there is no much to recompile (and dependencies
+# are not specified)...
 
-# Compile program that post-processes hex file
-(cd TOOLS; ./makeit.sh)
+EXE_BASENAME=`basename $1 | sed -e 's|\.c$||' -e 's|\.S$||'`
+SOURCE_DIR=`dirname $1`
+echo "============>" Making $EXE_BASENAME
+(cd $SOURCE_DIR; make clean $EXE_BASENAME".hex")
 
-# Compile firmware program (assembly or C)
-rm -f BUILD/firmware.o
-if [[ $1 == *.s ]]
-then
-  echo "asm compile: " $1 
-  $RVAS -march=$ARCH -mabi=$ABI -o BUILD/firmware.o $1
+rm -f firmware.hex firmware.txt
+if [ -f  $SOURCE_DIR"/"$EXE_BASENAME".hex" ]; then
+   cp $SOURCE_DIR"/"$EXE_BASENAME".hex" firmware.hex
+   echo "source:" $1 > firmware.txt
+   # Display message with ARCH,ABI,OPTIMIZE (useful to know at that point)
+   ARCH=`grep < makefile.inc '^ARCH='`
+   ABI=`grep < makefile.inc '^ABI='`
+   OPTIMIZE=`grep < makefile.inc '^OPTIMIZE='`
+   echo "Generated firmware.hex (arch=$ARCH, abi=$ABI, optimize=$OPTIMIZE)"
 else
-   if [[ $1 == *.c ]] 
-   then
-      echo "C compile: " $1
-      # This line so that we can examine produced assembly
-      $RVGCC $OPTIMIZE -fno-pic -march=$ARCH -mabi=$ABI -ILIB -S $1 -fno-stack-protector -o BUILD/firmware.s
-      $RVGCC $OPTIMIZE -fno-pic -march=$ARCH -mabi=$ABI -ILIB -c -fno-stack-protector -o BUILD/firmware.o $1
-   else
-      echo "Invalid firmware source file:" $1
-      echo "Specify one of the firmware source files in EXAMPLES (asm) or C_EXAMPLES (C)"
-      echo "Note: some examples may require a different hardware configuration and options in picosoc.v"
-      exit
-   fi
+   echo "Something went wrong, change VERBOSE in make_firmware.sh and retry"
 fi
 
-# Link
-# Note: seems that LIB/crt0.o is linked automatically (it is good, but I do not know why...)
-#$RVLD -m elf32lriscv_ilp32 -b elf32-littleriscv -Tfemtorv32.ld -o BUILD/firmware.elf BUILD/firmware.o -LLIB -lfemtorv32
-$RVLD -m elf32lriscv -b elf32-littleriscv -Tfemtorv32.ld -o BUILD/firmware.elf BUILD/firmware.o -LLIB -lfemtorv32 $ADDITIONAL_LIB
-# Dump hexadecimal content
-$RVOBJCOPY -O verilog BUILD/firmware.elf BUILD/firmware.objcopy.hex
-# Adapt hexadecimal content (32 bit words instead of individual bytes)
-(cd BUILD; rm firmware.hex; ../TOOLS/firmware_words)
-cp BUILD/firmware.hex .
-
-echo "Generated firmware (arch=$ARCH, abi=$ABI, optimize=$OPTIMIZE)"
 
 ## Display assembly
 #$RVOBJCOPY -O binary BUILD/firmware.elf BUILD/firmware.bin

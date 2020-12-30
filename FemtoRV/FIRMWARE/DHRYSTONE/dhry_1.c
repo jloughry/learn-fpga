@@ -353,6 +353,7 @@ main ()
     printf ("\n");
   }
 #endif
+  return 0;
 }
 
 
